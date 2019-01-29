@@ -121,7 +121,7 @@ public class Decoy extends EventProducer implements EventListenerInterface{
 			// 0);
 		} else {
 			this._mdata.destination = SimUtil.nextPoint(this._mdata.origin.x, this._mdata.origin.y, lastThreat.x,
-					lastThreat.y, 2.0, false);
+					lastThreat.y, this._mdata.speed, false);
 		}
 		this._mdata.startTime = this.simulator.getSimulatorTime();
 		this._mdata.stopTime = this._mdata.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());

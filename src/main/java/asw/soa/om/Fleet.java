@@ -101,11 +101,11 @@ public class Fleet extends EventProducer implements EventListenerInterface {
 		if (isDead) {
 			this._mdata.destination = new CartesianPoint(this._mdata.destination.x, this._mdata.destination.y, 0);
 		} else if (lastThreat == null) {
-			this._mdata.destination = new CartesianPoint(this._mdata.destination.x + 2, this._mdata.destination.y + 2,
+			this._mdata.destination = new CartesianPoint(this._mdata.destination.x + this._mdata.speed, this._mdata.destination.y + this._mdata.speed,
 					0);
 		} else {
 			this._mdata.destination = SimUtil.nextPoint(this._mdata.origin.x, this._mdata.origin.y, lastThreat.x,
-					lastThreat.y, 2.0, false);
+					lastThreat.y, this._mdata.speed, false);
 		}
 
 		this._mdata.startTime = this.simulator.getSimulatorTime();

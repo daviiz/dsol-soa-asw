@@ -123,7 +123,7 @@ public class Torpedo extends EventProducer implements EventListenerInterface {
 			// next_x, this._mdata.destination.y + next_y, 0);
 		} else {
 			this._mdata.destination = SimUtil.nextPoint(this._mdata.origin.x, this._mdata.origin.y, lastTarget.x,
-					lastTarget.y, 4.0, true);
+					lastTarget.y, this._mdata.speed, true);
 		}
 		this._mdata.startTime = this.simulator.getSimulatorTime();
 		// this._mdata.stopTime = this._mdata.startTime + Math.abs(new DistNormal(stream, 9,

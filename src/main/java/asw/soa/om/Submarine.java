@@ -83,7 +83,7 @@ public class Submarine extends EventProducer implements EventListenerInterface {
 		this._mdata.origin = this._mdata.destination;
 		// this.destination = new CartesianPoint(-100 + stream.nextInt(0, 200), -100 +
 		// stream.nextInt(0, 200), 0);
-		this._mdata.destination = new CartesianPoint(this._mdata.destination.x + 1, this._mdata.destination.y + 1, 0);
+		this._mdata.destination = new CartesianPoint(this._mdata.destination.x + this._mdata.speed, this._mdata.destination.y + this._mdata.speed, 0);
 		this._mdata.startTime = this.simulator.getSimulatorTime();
 		this._mdata.stopTime = this._mdata.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
 		this.simulator.scheduleEventAbs(this._mdata.stopTime, this, this, "next", null);
