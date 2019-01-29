@@ -37,12 +37,6 @@ public class Torpedo extends EventProducer implements EventListenerInterface, Lo
 
 	public boolean isFired = false;
 
-	/** the start time. */
-	private double startTime = Double.NaN;
-
-	/** the stop time. */
-	private double stopTime = Double.NaN;
-
 	/** the stream -- ugly but works. */
 	private static StreamInterface stream = new MersenneTwister();
 
@@ -142,11 +136,11 @@ public class Torpedo extends EventProducer implements EventListenerInterface, Lo
 			this._mdata.destination = SimUtil.nextPoint(this._mdata.origin.x, this._mdata.origin.y, lastTarget.x,
 					lastTarget.y, 4.0, true);
 		}
-		this.startTime = this.simulator.getSimulatorTime();
-		// this.stopTime = this.startTime + Math.abs(new DistNormal(stream, 9,
+		this._mdata.startTime = this.simulator.getSimulatorTime();
+		// this._mdata.stopTime = this._mdata.startTime + Math.abs(new DistNormal(stream, 9,
 		// 1.8).draw());
-		this.stopTime = this.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
-		this.simulator.scheduleEventAbs(this.stopTime, this, this, "next", null);
+		this._mdata.stopTime = this._mdata.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
+		this.simulator.scheduleEventAbs(this._mdata.stopTime, this, this, "next", null);
 
 		super.fireTimedEvent(TORPEDO_LOCATION_MSG,
 				new EntityMSG(_mdata.name, _mdata.belong, _mdata.status, this._mdata.origin.x, this._mdata.origin.y),
@@ -156,7 +150,7 @@ public class Torpedo extends EventProducer implements EventListenerInterface, Lo
 
 	@Override
 	public DirectedPoint getLocation() throws RemoteException {
-		double fraction = (this.simulator.getSimulatorTime() - this.startTime) / (this.stopTime - this.startTime);
+		double fraction = (this.simulator.getSimulatorTime() - this._mdata.startTime) / (this._mdata.stopTime - this._mdata.startTime);
 		double x = this._mdata.origin.x + (this._mdata.destination.x - this._mdata.origin.x) * fraction;
 		double y = this._mdata.origin.y + (this._mdata.destination.y - this._mdata.origin.y) * fraction;
 		return new DirectedPoint(x, y, 0, 0.0, 0.0, this._mdata.theta);

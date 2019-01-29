@@ -40,12 +40,6 @@ public class Decoy extends EventProducer implements EventListenerInterface, Loca
 
 	public static final EventType DECOY_LOCATION_MSG = new EventType("DECOY_LOCATION_MSG");
 
-	/** the start time. */
-	private double startTime = Double.NaN;
-
-	/** the stop time. */
-	private double stopTime = Double.NaN;
-
 	private boolean isFired = false;
 
 	private EntityMSG lastThreat = null;
@@ -134,9 +128,9 @@ public class Decoy extends EventProducer implements EventListenerInterface, Loca
 			this._mdata.destination = SimUtil.nextPoint(this._mdata.origin.x, this._mdata.origin.y, lastThreat.x,
 					lastThreat.y, 2.0, false);
 		}
-		this.startTime = this.simulator.getSimulatorTime();
-		this.stopTime = this.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
-		this.simulator.scheduleEventAbs(this.stopTime, this, this, "next", null);
+		this._mdata.startTime = this.simulator.getSimulatorTime();
+		this._mdata.stopTime = this._mdata.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
+		this.simulator.scheduleEventAbs(this._mdata.stopTime, this, this, "next", null);
 
 		super.fireTimedEvent(DECOY_LOCATION_MSG,
 				new EntityMSG(_mdata.name, _mdata.belong, _mdata.status, this._mdata.origin.x, this._mdata.origin.y),
@@ -146,7 +140,7 @@ public class Decoy extends EventProducer implements EventListenerInterface, Loca
 
 	@Override
 	public DirectedPoint getLocation() throws RemoteException {
-		double fraction = (this.simulator.getSimulatorTime() - this.startTime) / (this.stopTime - this.startTime);
+		double fraction = (this.simulator.getSimulatorTime() - this._mdata.startTime) / (this._mdata.stopTime - this._mdata.startTime);
 		double x = this._mdata.origin.x + (this._mdata.destination.x - this._mdata.origin.x) * fraction;
 		double y = this._mdata.origin.y + (this._mdata.destination.y - this._mdata.origin.y) * fraction;
 		return new DirectedPoint(x, y, 0, 0.0, 0.0, this._mdata.theta);

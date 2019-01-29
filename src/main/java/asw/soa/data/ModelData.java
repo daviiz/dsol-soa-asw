@@ -21,6 +21,12 @@ public class ModelData implements java.io.Serializable {
 
 	/** the destination. */
 	public CartesianPoint destination = new CartesianPoint(0, 0, 0);
+	
+	/** the start time. */
+	public double startTime = Double.NaN;
+
+	/** the stop time. */
+	public double stopTime = Double.NaN;
 
 	/** the radius of the ball. */
 	public static final double RADIUS = 5.0;

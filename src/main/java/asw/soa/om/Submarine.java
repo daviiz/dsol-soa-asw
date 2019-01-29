@@ -47,12 +47,6 @@ public class Submarine extends EventProducer implements EventListenerInterface, 
 	/** the simulator. */
 	private DEVSSimulatorInterface.TimeDouble simulator = null;
 
-	/** the start time. */
-	private double startTime = Double.NaN;
-
-	/** the stop time. */
-	private double stopTime = Double.NaN;
-
 	/** the stream -- ugly but works. */
 	private static StreamInterface stream = new MersenneTwister();
 
@@ -96,14 +90,14 @@ public class Submarine extends EventProducer implements EventListenerInterface, 
 		// this.destination = new CartesianPoint(-100 + stream.nextInt(0, 200), -100 +
 		// stream.nextInt(0, 200), 0);
 		this._mdata.destination = new CartesianPoint(this._mdata.destination.x + 1, this._mdata.destination.y + 1, 0);
-		this.startTime = this.simulator.getSimulatorTime();
-		this.stopTime = this.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
-		this.simulator.scheduleEventAbs(this.stopTime, this, this, "next", null);
+		this._mdata.startTime = this.simulator.getSimulatorTime();
+		this._mdata.stopTime = this._mdata.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
+		this.simulator.scheduleEventAbs(this._mdata.stopTime, this, this, "next", null);
 	}
 
 	@Override
 	public DirectedPoint getLocation() throws RemoteException {
-		double fraction = (this.simulator.getSimulatorTime() - this.startTime) / (this.stopTime - this.startTime);
+		double fraction = (this.simulator.getSimulatorTime() - this._mdata.startTime) / (this._mdata.stopTime - this._mdata.startTime);
 		double x = this._mdata.origin.x + (this._mdata.destination.x - this._mdata.origin.x) * fraction;
 		double y = this._mdata.origin.y + (this._mdata.destination.y - this._mdata.origin.y) * fraction;
 		return new DirectedPoint(x, y, 0, 0.0, 0.0, 0);
