@@ -109,12 +109,7 @@ public class Decoy extends EventProducer implements EventListenerInterface, Loca
 		isFired = true;
 		lastThreat = object;
 		// 视图组件注册：
-		try {
-			Visual2dService.getInstance().addVisualComponent(this._mdata.name,
-					new Visual2dRender(this, simulator, this._mdata));
-		} catch (NamingException e) {
-			SimLogger.always().error(e);
-		}
+		Visual2dService.getInstance().register(this._mdata.name, this, simulator,this._mdata);
 		next();
 	}
 

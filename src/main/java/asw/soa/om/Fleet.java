@@ -65,17 +65,17 @@ public class Fleet extends EventProducer implements EventListenerInterface, Loca
 	 */
 	private int aswPolicy = 1;
 
-	private ModelData _vdata = new ModelData();
+	private ModelData _mdata = new ModelData();
 
 //	public Fleet(String name, double x, double y, final DEVSSimulatorInterface.TimeDouble simulator)
 //			throws RemoteException, SimRuntimeException {
 //		
-//		_vdata.origin = new CartesianPoint(x, y, 0);
-//		_vdata.destination = new CartesianPoint(x, y, 0);
+//		_mdata.origin = new CartesianPoint(x, y, 0);
+//		_mdata.destination = new CartesianPoint(x, y, 0);
 //		this.simulator = simulator;
-//		this._vdata.name = name;
-//		_vdata.detectRange = 200;
-//		_vdata.belong = 1;
+//		this._mdata.name = name;
+//		_mdata.detectRange = 200;
+//		_mdata.belong = 1;
 //		
 //
 //		_decoy1 = new Decoy(name + "_decoy1", x, y, simulator);
@@ -87,13 +87,13 @@ public class Fleet extends EventProducer implements EventListenerInterface, Loca
 	public Fleet(ModelData _data, final DEVSSimulatorInterface.TimeDouble simulator)
 			throws RemoteException, SimRuntimeException {
 		this.simulator = simulator;
-		this._vdata = _data;
+		this._mdata = _data;
 
-		ModelData d1Data = new ModelData("Decoy_1_" + this._vdata.name);
-		d1Data.origin = d1Data.destination = this._vdata.origin;
+		ModelData d1Data = new ModelData("Decoy_1_" + this._mdata.name);
+		d1Data.origin = d1Data.destination = this._mdata.origin;
 		_decoy1 = new Decoy(d1Data, simulator);
-		ModelData d2Data = new ModelData("Decoy_2_" + this._vdata.name);
-		d2Data.origin = d2Data.destination = this._vdata.origin;
+		ModelData d2Data = new ModelData("Decoy_2_" + this._mdata.name);
+		d2Data.origin = d2Data.destination = this._mdata.origin;
 		_decoy2 = new Decoy(d2Data, simulator);
 
 		this.next();
@@ -107,15 +107,15 @@ public class Fleet extends EventProducer implements EventListenerInterface, Loca
 	 */
 	private synchronized void next() throws RemoteException, SimRuntimeException {
 
-		this._vdata.origin = this._vdata.destination;
+		this._mdata.origin = this._mdata.destination;
 
 		if (isDead) {
-			this._vdata.destination = new CartesianPoint(this._vdata.destination.x, this._vdata.destination.y, 0);
+			this._mdata.destination = new CartesianPoint(this._mdata.destination.x, this._mdata.destination.y, 0);
 		} else if (lastThreat == null) {
-			this._vdata.destination = new CartesianPoint(this._vdata.destination.x + 2, this._vdata.destination.y + 2,
+			this._mdata.destination = new CartesianPoint(this._mdata.destination.x + 2, this._mdata.destination.y + 2,
 					0);
 		} else {
-			this._vdata.destination = SimUtil.nextPoint(this._vdata.origin.x, this._vdata.origin.y, lastThreat.x,
+			this._mdata.destination = SimUtil.nextPoint(this._mdata.origin.x, this._mdata.origin.y, lastThreat.x,
 					lastThreat.y, 2.0, false);
 		}
 
@@ -126,7 +126,7 @@ public class Fleet extends EventProducer implements EventListenerInterface, Loca
 
 		this.simulator.scheduleEventAbs(this.stopTime, this, this, "next", null);
 		super.fireTimedEvent(FLEET_LOCATION_UPDATE_EVENT,
-				new EntityMSG(_vdata.name, _vdata.belong, _vdata.status, this._vdata.origin.x, this._vdata.origin.y),
+				new EntityMSG(_mdata.name, _mdata.belong, _mdata.status, this._mdata.origin.x, this._mdata.origin.y),
 				this.simulator.getSimTime().plus(2.0));
 
 	}
@@ -134,9 +134,9 @@ public class Fleet extends EventProducer implements EventListenerInterface, Loca
 	@Override
 	public DirectedPoint getLocation() throws RemoteException {
 		double fraction = (this.simulator.getSimulatorTime() - this.startTime) / (this.stopTime - this.startTime);
-		double x = this._vdata.origin.x + (this._vdata.destination.x - this._vdata.origin.x) * fraction;
-		double y = this._vdata.origin.y + (this._vdata.destination.y - this._vdata.origin.y) * fraction;
-		return new DirectedPoint(x, y, 0, 0.0, 0.0, this._vdata.theta);
+		double x = this._mdata.origin.x + (this._mdata.destination.x - this._mdata.origin.x) * fraction;
+		double y = this._mdata.origin.y + (this._mdata.destination.y - this._mdata.origin.y) * fraction;
+		return new DirectedPoint(x, y, 0, 0.0, 0.0, this._mdata.theta);
 	}
 
 	@Override
@@ -154,13 +154,13 @@ public class Fleet extends EventProducer implements EventListenerInterface, Loca
 				EntityMSG tmp = (EntityMSG) event.getContent();
 				// System.out.println(name + " received msg: " + tmp.name + " current
 				// location:x=" + tmp.x + ", y=" + tmp.y);
-				double dis = SimUtil.calcLength(this._vdata.origin.x, this._vdata.origin.y, tmp.x, tmp.y);
+				double dis = SimUtil.calcLength(this._mdata.origin.x, this._mdata.origin.y, tmp.x, tmp.y);
 
-				if (dis < _vdata.detectRange) {
+				if (dis < _mdata.detectRange) {
 					if (aswPolicy == 1) {
 						if (decoyCouts == 2) {
 							try {
-								_decoy1.setLocation(this._vdata.origin);
+								_decoy1.setLocation(this._mdata.origin);
 								this.simulator.scheduleEventRel(20.0, this, _decoy1, "fire", new Object[] { tmp });
 								decoyCouts--;
 
@@ -169,7 +169,7 @@ public class Fleet extends EventProducer implements EventListenerInterface, Loca
 							}
 						} else if (decoyCouts == 1) {
 							try {
-								_decoy2.setLocation(this._vdata.origin);
+								_decoy2.setLocation(this._mdata.origin);
 								this.simulator.scheduleEventRel(120.0, this, _decoy2, "fire", new Object[] { tmp });
 								decoyCouts--;
 							} catch (SimRuntimeException e) {
@@ -180,10 +180,10 @@ public class Fleet extends EventProducer implements EventListenerInterface, Loca
 					lastThreat = tmp;
 					if (dis < SimUtil.hit_distance) {
 						// visualComponent.setColor(Color.BLACK);
-						_vdata.color = Color.BLACK;
-						Visual2dService.getInstance().update(this._vdata);
+						_mdata.color = Color.BLACK;
+						Visual2dService.getInstance().update(this._mdata);
 						isDead = true;
-						_vdata.status = false;
+						_mdata.status = false;
 					}
 				}
 
@@ -193,7 +193,7 @@ public class Fleet extends EventProducer implements EventListenerInterface, Loca
 
 	@Override
 	public Bounds getBounds() throws RemoteException {
-		return new BoundingSphere(new Point3d(0, 0, 0), _vdata.RADIUS);
+		return new BoundingSphere(new Point3d(0, 0, 0), _mdata.RADIUS);
 	}
 
 }

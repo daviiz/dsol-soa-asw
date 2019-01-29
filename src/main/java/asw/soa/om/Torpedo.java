@@ -122,13 +122,9 @@ public class Torpedo extends EventProducer implements EventListenerInterface, Lo
 	public synchronized void fire(final EntityMSG object) throws RemoteException, NamingException, SimRuntimeException {
 		isFired = true;
 		lastTarget = object;
-		// 视图组件注册：
-		try {
-			Visual2dService.getInstance().addVisualComponent(this._mdata.name,
-					new Visual2dRender(this, simulator, this._mdata));
-		} catch (NamingException e) {
-			SimLogger.always().error(e);
-		}
+		
+		Visual2dService.getInstance().register(this._mdata.name, this, simulator,this._mdata);
+		
 		next();
 	}
 

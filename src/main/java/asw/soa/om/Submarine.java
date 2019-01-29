@@ -42,7 +42,7 @@ public class Submarine extends EventProducer implements EventListenerInterface, 
 
 	// private String name;
 
-	private ModelData _vdata = new ModelData();
+	private ModelData _mdata = new ModelData();
 
 	/** the simulator. */
 	private DEVSSimulatorInterface.TimeDouble simulator = null;
@@ -65,21 +65,21 @@ public class Submarine extends EventProducer implements EventListenerInterface, 
 
 	public Submarine(ModelData data, final DEVSSimulatorInterface.TimeDouble simulator)
 			throws RemoteException, SimRuntimeException {
-		this._vdata = data;
+		this._mdata = data;
 		this.simulator = simulator;
 
-		ModelData t1Data = new ModelData("Torpedo_1_" + this._vdata.name);
-		t1Data.origin = t1Data.destination = this._vdata.origin;
+		ModelData t1Data = new ModelData("Torpedo_1_" + this._mdata.name);
+		t1Data.origin = t1Data.destination = this._mdata.origin;
 		_t1 = new Torpedo(t1Data, this.simulator);
 
-		ModelData t2Data = new ModelData("Torpedo_2_" + this._vdata.name);
-		t2Data.origin = t2Data.destination = this._vdata.origin;
+		ModelData t2Data = new ModelData("Torpedo_2_" + this._mdata.name);
+		t2Data.origin = t2Data.destination = this._mdata.origin;
 		_t2 = new Torpedo(t2Data, this.simulator);
 
-		// _t1 = new Torpedo(this._vdata.name
-		// +"_torpedo1",this._vdata.origin.x,this._vdata.origin.y,simulator);
-		// _t2 = new Torpedo(this._vdata.name
-		// +"_torpedo2",this._vdata.origin.x,this._vdata.origin.y,simulator);
+		// _t1 = new Torpedo(this._mdata.name
+		// +"_torpedo1",this._mdata.origin.x,this._mdata.origin.y,simulator);
+		// _t2 = new Torpedo(this._mdata.name
+		// +"_torpedo2",this._mdata.origin.x,this._mdata.origin.y,simulator);
 		weaponCounts = 2;
 
 		this.next();
@@ -92,10 +92,10 @@ public class Submarine extends EventProducer implements EventListenerInterface, 
 	 * @throws SimRuntimeException on simulation failure
 	 */
 	private void next() throws RemoteException, SimRuntimeException {
-		this._vdata.origin = this._vdata.destination;
+		this._mdata.origin = this._mdata.destination;
 		// this.destination = new CartesianPoint(-100 + stream.nextInt(0, 200), -100 +
 		// stream.nextInt(0, 200), 0);
-		this._vdata.destination = new CartesianPoint(this._vdata.destination.x + 1, this._vdata.destination.y + 1, 0);
+		this._mdata.destination = new CartesianPoint(this._mdata.destination.x + 1, this._mdata.destination.y + 1, 0);
 		this.startTime = this.simulator.getSimulatorTime();
 		this.stopTime = this.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
 		this.simulator.scheduleEventAbs(this.stopTime, this, this, "next", null);
@@ -104,8 +104,8 @@ public class Submarine extends EventProducer implements EventListenerInterface, 
 	@Override
 	public DirectedPoint getLocation() throws RemoteException {
 		double fraction = (this.simulator.getSimulatorTime() - this.startTime) / (this.stopTime - this.startTime);
-		double x = this._vdata.origin.x + (this._vdata.destination.x - this._vdata.origin.x) * fraction;
-		double y = this._vdata.origin.y + (this._vdata.destination.y - this._vdata.origin.y) * fraction;
+		double x = this._mdata.origin.x + (this._mdata.destination.x - this._mdata.origin.x) * fraction;
+		double y = this._mdata.origin.y + (this._mdata.destination.y - this._mdata.origin.y) * fraction;
 		return new DirectedPoint(x, y, 0, 0.0, 0.0, 0);
 	}
 
@@ -116,18 +116,18 @@ public class Submarine extends EventProducer implements EventListenerInterface, 
 			// System.out.println(name+" received msg: "+tmp.name+" current
 			// location:x="+tmp.x+", y="+tmp.y);
 
-			double dis = SimUtil.calcLength(this._vdata.origin.x, this._vdata.origin.y, tmp.x, tmp.y);
-			if (dis < _vdata.detectRange) {
+			double dis = SimUtil.calcLength(this._mdata.origin.x, this._mdata.origin.y, tmp.x, tmp.y);
+			if (dis < _mdata.detectRange) {
 				// 设置通信线数据
-				_vdata.lineData.x1 = (int) this._vdata.origin.x;
-				_vdata.lineData.y1 = (int) this._vdata.origin.y;
-				_vdata.lineData.x2 = (int) tmp.x;
-				_vdata.lineData.y2 = (int) tmp.y;
+				_mdata.lineData.x1 = (int) this._mdata.origin.x;
+				_mdata.lineData.y1 = (int) this._mdata.origin.y;
+				_mdata.lineData.x2 = (int) tmp.x;
+				_mdata.lineData.y2 = (int) tmp.y;
 				// 施放鱼雷，对同一目标仅施放一个鱼雷
 				if (!LockedTarget.containsKey(tmp.name)) {
 					if (weaponCounts == 2) {
 						try {
-							_t1.setLocation(this._vdata.origin);
+							_t1.setLocation(this._mdata.origin);
 							this.simulator.scheduleEventRel(2.0, this, _t1, "fire", new Object[] { tmp });
 							weaponCounts--;
 							LockedTarget.put(tmp.name, tmp.name);
@@ -136,7 +136,7 @@ public class Submarine extends EventProducer implements EventListenerInterface, 
 						}
 					} else if (weaponCounts == 1) {
 						try {
-							_t2.setLocation(this._vdata.origin);
+							_t2.setLocation(this._mdata.origin);
 							this.simulator.scheduleEventRel(2.0, this, _t2, "fire", new Object[] { tmp });
 							LockedTarget.put(tmp.name, tmp.name);
 							weaponCounts--;
@@ -147,20 +147,20 @@ public class Submarine extends EventProducer implements EventListenerInterface, 
 						// 逃逸
 					}
 				}
-				Visual2dService.getInstance().update(_vdata);
+				Visual2dService.getInstance().update(_mdata);
 			} else {
-				_vdata.lineData.x1 = 0;
-				_vdata.lineData.y1 = 0;
-				_vdata.lineData.x2 = 0;
-				_vdata.lineData.y2 = 0;
+				_mdata.lineData.x1 = 0;
+				_mdata.lineData.y1 = 0;
+				_mdata.lineData.x2 = 0;
+				_mdata.lineData.y2 = 0;
 			}
-			Visual2dService.getInstance().update(_vdata);
+			Visual2dService.getInstance().update(_mdata);
 		}
 	}
 
 	@Override
 	public Bounds getBounds() throws RemoteException {
-		return new BoundingSphere(new Point3d(0, 0, 0), _vdata.RADIUS);
+		return new BoundingSphere(new Point3d(0, 0, 0), _mdata.RADIUS);
 	}
 
 }
