@@ -9,7 +9,6 @@ import asw.soa.om.Decoy;
 import asw.soa.om.Fleet;
 import asw.soa.om.Submarine;
 import asw.soa.om.Torpedo;
-import asw.soa.view.Visual2dRender;
 import asw.soa.view.Visual2dService;
 import nl.tudelft.simulation.dsol.SimRuntimeException;
 import nl.tudelft.simulation.dsol.logger.SimLogger;

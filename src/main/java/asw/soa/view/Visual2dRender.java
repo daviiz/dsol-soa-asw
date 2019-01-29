@@ -19,7 +19,7 @@ import nl.tudelft.simulation.dsol.simulators.SimulatorInterface;
  * @author daiwenzhi
  *
  */
-public class Visual2dRender extends Renderable2D<Locatable> {
+class Visual2dRender extends Renderable2D<Locatable> {
 
 	/**
 	 * 用于渲染所用的所有模型数据
