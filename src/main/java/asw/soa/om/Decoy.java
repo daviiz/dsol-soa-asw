@@ -3,17 +3,13 @@ package asw.soa.om;
 import java.awt.Color;
 import java.rmi.RemoteException;
 
-import javax.media.j3d.BoundingSphere;
-import javax.media.j3d.Bounds;
 import javax.naming.NamingException;
-import javax.vecmath.Point3d;
 
 import asw.soa.data.EntityMSG;
 import asw.soa.data.ModelData;
 import asw.soa.main.SimUtil;
 import asw.soa.view.Visual2dService;
 import nl.tudelft.simulation.dsol.SimRuntimeException;
-import nl.tudelft.simulation.dsol.animation.Locatable;
 import nl.tudelft.simulation.dsol.simulators.DEVSSimulatorInterface;
 import nl.tudelft.simulation.event.EventInterface;
 import nl.tudelft.simulation.event.EventListenerInterface;
@@ -23,7 +19,6 @@ import nl.tudelft.simulation.jstats.distributions.DistNormal;
 import nl.tudelft.simulation.jstats.streams.MersenneTwister;
 import nl.tudelft.simulation.jstats.streams.StreamInterface;
 import nl.tudelft.simulation.language.d3.CartesianPoint;
-import nl.tudelft.simulation.language.d3.DirectedPoint;
 
 /**
  * 鱼雷诱饵模型
