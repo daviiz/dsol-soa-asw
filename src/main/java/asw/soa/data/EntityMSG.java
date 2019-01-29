@@ -1,6 +1,6 @@
 package asw.soa.data;
 
-public class EntityMSG implements java.io.Serializable{
+public class EntityMSG implements java.io.Serializable {
 	/**
 	 * 
 	 */
@@ -8,11 +8,11 @@ public class EntityMSG implements java.io.Serializable{
 	/**
 	 * 红蓝方归属：1 红方，0 中立方，-1 蓝方
 	 */
-	public int belong; 
+	public int belong;
 	/**
 	 * 生存状态： true 生存，false 阵亡
 	 */
-	public boolean status; 
+	public boolean status;
 	/**
 	 * 模型实体位置 -x
 	 */
@@ -21,13 +21,13 @@ public class EntityMSG implements java.io.Serializable{
 	 * 模型实体位置 -y
 	 */
 	public double y;
-	
+
 	/**
 	 * 模型实体名称
 	 */
 	public String name;
-	
-	public EntityMSG(String name,int _belong, boolean _status,double _x,double _y){
+
+	public EntityMSG(String name, int _belong, boolean _status, double _x, double _y) {
 		this.name = name;
 		this.belong = _belong;
 		this.status = _status;

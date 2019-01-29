@@ -5,19 +5,16 @@ import java.rmi.RemoteException;
 
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Bounds;
-import javax.naming.NamingException;
 import javax.vecmath.Point3d;
 
 import asw.soa.data.EntityMSG;
 import asw.soa.data.ModelData;
 import asw.soa.main.SimUtil;
-import asw.soa.view.Visual2dRender;
 import asw.soa.view.Visual2dService;
 import nl.tudelft.simulation.dsol.SimRuntimeException;
 import nl.tudelft.simulation.dsol.animation.Locatable;
 import nl.tudelft.simulation.dsol.logger.SimLogger;
 import nl.tudelft.simulation.dsol.simulators.DEVSSimulatorInterface;
-import nl.tudelft.simulation.dsol.simulators.DEVSSimulatorInterface.TimeDouble;
 import nl.tudelft.simulation.event.EventInterface;
 import nl.tudelft.simulation.event.EventListenerInterface;
 import nl.tudelft.simulation.event.EventProducer;
@@ -32,7 +29,7 @@ import nl.tudelft.simulation.language.d3.DirectedPoint;
  * 
  * @author daiwenzhi
  */
-public class Fleet extends EventProducer implements EventListenerInterface,Locatable {
+public class Fleet extends EventProducer implements EventListenerInterface, Locatable {
 
 	private static final long serialVersionUID = 5337683693470946049L;
 
@@ -66,10 +63,10 @@ public class Fleet extends EventProducer implements EventListenerInterface,Locat
 	/**
 	 * asw策略设置：1：施放鱼雷并逃逸；2:逃逸
 	 */
-	private int aswPolicy = 1; 
-	
+	private int aswPolicy = 1;
+
 	private ModelData _vdata = new ModelData();
-	
+
 //	public Fleet(String name, double x, double y, final DEVSSimulatorInterface.TimeDouble simulator)
 //			throws RemoteException, SimRuntimeException {
 //		
@@ -87,17 +84,18 @@ public class Fleet extends EventProducer implements EventListenerInterface,Locat
 //		this.next();
 //	}
 
-	public Fleet(ModelData _data, final DEVSSimulatorInterface.TimeDouble  simulator) throws RemoteException, SimRuntimeException {
+	public Fleet(ModelData _data, final DEVSSimulatorInterface.TimeDouble simulator)
+			throws RemoteException, SimRuntimeException {
 		this.simulator = simulator;
 		this._vdata = _data;
-		
-		ModelData d1Data = new ModelData("Decoy_1_"+this._vdata.name);
+
+		ModelData d1Data = new ModelData("Decoy_1_" + this._vdata.name);
 		d1Data.origin = d1Data.destination = this._vdata.origin;
 		_decoy1 = new Decoy(d1Data, simulator);
-		ModelData d2Data = new ModelData("Decoy_2_"+this._vdata.name);
+		ModelData d2Data = new ModelData("Decoy_2_" + this._vdata.name);
 		d2Data.origin = d2Data.destination = this._vdata.origin;
 		_decoy2 = new Decoy(d2Data, simulator);
-		
+
 		this.next();
 	}
 
@@ -108,21 +106,23 @@ public class Fleet extends EventProducer implements EventListenerInterface,Locat
 	 * @throws SimRuntimeException on simulation failure
 	 */
 	private synchronized void next() throws RemoteException, SimRuntimeException {
-		
+
 		this._vdata.origin = this._vdata.destination;
-		
+
 		if (isDead) {
 			this._vdata.destination = new CartesianPoint(this._vdata.destination.x, this._vdata.destination.y, 0);
 		} else if (lastThreat == null) {
-			this._vdata.destination = new CartesianPoint(this._vdata.destination.x + 2, this._vdata.destination.y + 2, 0);
+			this._vdata.destination = new CartesianPoint(this._vdata.destination.x + 2, this._vdata.destination.y + 2,
+					0);
 		} else {
-			this._vdata.destination = SimUtil.nextPoint(this._vdata.origin.x, this._vdata.origin.y, lastThreat.x, lastThreat.y, 2.0, false);
+			this._vdata.destination = SimUtil.nextPoint(this._vdata.origin.x, this._vdata.origin.y, lastThreat.x,
+					lastThreat.y, 2.0, false);
 		}
 
 		this.startTime = this.simulator.getSimulatorTime();
 		this.stopTime = this.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
-		
-		//System.out.println(Math.abs(new DistNormal(stream, 9, 1.8).draw()));
+
+		// System.out.println(Math.abs(new DistNormal(stream, 9, 1.8).draw()));
 
 		this.simulator.scheduleEventAbs(this.stopTime, this, this, "next", null);
 		super.fireTimedEvent(FLEET_LOCATION_UPDATE_EVENT,
@@ -144,14 +144,16 @@ public class Fleet extends EventProducer implements EventListenerInterface,Locat
 		if (!isDead) {
 			if (event.getType().equals(FLEET_LOCATION_UPDATE_EVENT)) {
 				EntityMSG tmp = (EntityMSG) event.getContent();
-				//System.out.println(name + " received msg: " + tmp.name + " current location:x=" + tmp.x + ", y=" + tmp.y);
+				// System.out.println(name + " received msg: " + tmp.name + " current
+				// location:x=" + tmp.x + ", y=" + tmp.y);
 
 				// fireTimedEvent(Fleet.FLEET_LOCATION_UPDATE_EVENT, (LOC)event.getContent(),
 				// this.simulator.getSimulatorTime());
 
 			} else if (event.getType().equals(Torpedo.TORPEDO_LOCATION_MSG)) {
 				EntityMSG tmp = (EntityMSG) event.getContent();
-				//System.out.println(name + " received msg: " + tmp.name + " current location:x=" + tmp.x + ", y=" + tmp.y);
+				// System.out.println(name + " received msg: " + tmp.name + " current
+				// location:x=" + tmp.x + ", y=" + tmp.y);
 				double dis = SimUtil.calcLength(this._vdata.origin.x, this._vdata.origin.y, tmp.x, tmp.y);
 
 				if (dis < _vdata.detectRange) {
@@ -161,7 +163,7 @@ public class Fleet extends EventProducer implements EventListenerInterface,Locat
 								_decoy1.setLocation(this._vdata.origin);
 								this.simulator.scheduleEventRel(20.0, this, _decoy1, "fire", new Object[] { tmp });
 								decoyCouts--;
-								
+
 							} catch (SimRuntimeException e) {
 								SimLogger.always().error(e);
 							}
@@ -177,7 +179,7 @@ public class Fleet extends EventProducer implements EventListenerInterface,Locat
 					}
 					lastThreat = tmp;
 					if (dis < SimUtil.hit_distance) {
-						//visualComponent.setColor(Color.BLACK);
+						// visualComponent.setColor(Color.BLACK);
 						_vdata.color = Color.BLACK;
 						Visual2dService.getInstance().update(this._vdata);
 						isDead = true;
@@ -188,6 +190,7 @@ public class Fleet extends EventProducer implements EventListenerInterface,Locat
 			}
 		}
 	}
+
 	@Override
 	public Bounds getBounds() throws RemoteException {
 		return new BoundingSphere(new Point3d(0, 0, 0), _vdata.RADIUS);
