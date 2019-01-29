@@ -1,0 +1,37 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>nl.tudelft</groupId>
+  <artifactId>dsol-asw</artifactId>
+  <version>0.0.1</version>
+  <name>DSOL ASW</name>
+  <description>Anti-Submarine-Warfare</description>
+  <properties>
+  	<jdk.version>1.8</jdk.version>
+  	<maven.compiler.source>1.8</maven.compiler.source>
+  	<maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+  <repositories>
+  <repository>
+    <name>DSOL Public Repository</name>
+    <id>dsol</id>
+    <url>http://www.simulation.tudelft.nl/maven</url>
+  </repository>
+  <repository>
+    <name>sim0mq Public Repository</name>
+    <id>sim0mq</id>
+    <url>http://sim0mq.org/maven</url>
+  </repository>
+</repositories>
+  <dependencies>
+  	<dependency>
+  		<groupId>dsol</groupId>
+  		<artifactId>dsol-core</artifactId>
+  		<version>3.03.02</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>dsol</groupId>
+  		<artifactId>dsol-swing</artifactId>
+  		<version>3.03.02</version>
+  	</dependency>
+  </dependencies>
+</project>
