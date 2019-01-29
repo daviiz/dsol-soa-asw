@@ -1,5 +1,9 @@
 package asw.soa.data;
-
+/**
+ * 
+ * @author daiwenzhi
+ *
+ */
 public class EntityMSG implements java.io.Serializable {
 	/**
 	 * 
