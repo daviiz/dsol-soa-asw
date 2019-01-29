@@ -67,5 +67,19 @@ public class Visual2dService {
 		}
 		components.put(name, new Visual2dRender(loc,simulator,_data));
 	}
+	
+	public void register(String name,TimeDouble simulator, ModelData _data) throws RemoteException, NamingException {
+		if (name == null || name.equals("") ||simulator == null || _data == null)
+			return;
+		
+		//查重
+		for (HashMap.Entry<String, Visual2dRender> entry : components.entrySet()) {
+			if (entry.getKey().equals(name)) {
+				SimLogger.always().error(new Exception("no duplicate model name !"));
+				return;
+			}
+		}
+		components.put(name, new Visual2dRender(new VisualComponent(_data, simulator),simulator,_data));
+	}
 
 }

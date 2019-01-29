@@ -29,7 +29,7 @@ import nl.tudelft.simulation.language.d3.DirectedPoint;
  * @author daiwenzhi
  *
  */
-public class Torpedo extends EventProducer implements EventListenerInterface, Locatable {
+public class Torpedo extends EventProducer implements EventListenerInterface {
 
 	private static final long serialVersionUID = -8295279255703776031L;
 
@@ -115,7 +115,7 @@ public class Torpedo extends EventProducer implements EventListenerInterface, Lo
 		isFired = true;
 		lastTarget = object;
 		
-		Visual2dService.getInstance().register(this._mdata.name, this, simulator,this._mdata);
+		Visual2dService.getInstance().register(this._mdata.name, simulator,this._mdata);
 		
 		next();
 	}
@@ -145,25 +145,10 @@ public class Torpedo extends EventProducer implements EventListenerInterface, Lo
 		super.fireTimedEvent(TORPEDO_LOCATION_MSG,
 				new EntityMSG(_mdata.name, _mdata.belong, _mdata.status, this._mdata.origin.x, this._mdata.origin.y),
 				this.simulator.getSimTime().plus(2.0));
-
-	}
-
-	@Override
-	public DirectedPoint getLocation() throws RemoteException {
-		double fraction = (this.simulator.getSimulatorTime() - this._mdata.startTime) / (this._mdata.stopTime - this._mdata.startTime);
-		double x = this._mdata.origin.x + (this._mdata.destination.x - this._mdata.origin.x) * fraction;
-		double y = this._mdata.origin.y + (this._mdata.destination.y - this._mdata.origin.y) * fraction;
-		return new DirectedPoint(x, y, 0, 0.0, 0.0, this._mdata.theta);
 	}
 
 	public void setLocation(CartesianPoint _origin) {
 		this._mdata.origin = _origin;
 		this._mdata.destination = _origin;
 	}
-
-	@Override
-	public Bounds getBounds() throws RemoteException {
-		return new BoundingSphere(new Point3d(0, 0, 0), _mdata.RADIUS);
-	}
-
 }

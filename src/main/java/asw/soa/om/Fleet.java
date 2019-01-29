@@ -29,7 +29,7 @@ import nl.tudelft.simulation.language.d3.DirectedPoint;
  * 
  * @author daiwenzhi
  */
-public class Fleet extends EventProducer implements EventListenerInterface, Locatable {
+public class Fleet extends EventProducer implements EventListenerInterface {
 
 	private static final long serialVersionUID = 5337683693470946049L;
 
@@ -127,14 +127,6 @@ public class Fleet extends EventProducer implements EventListenerInterface, Loca
 	}
 
 	@Override
-	public DirectedPoint getLocation() throws RemoteException {
-		double fraction = (this.simulator.getSimulatorTime() - this._mdata.startTime) / (this._mdata.stopTime - this._mdata.startTime);
-		double x = this._mdata.origin.x + (this._mdata.destination.x - this._mdata.origin.x) * fraction;
-		double y = this._mdata.origin.y + (this._mdata.destination.y - this._mdata.origin.y) * fraction;
-		return new DirectedPoint(x, y, 0, 0.0, 0.0, this._mdata.theta);
-	}
-
-	@Override
 	public synchronized void notify(final EventInterface event) throws RemoteException {
 		if (!isDead) {
 			if (event.getType().equals(FLEET_LOCATION_UPDATE_EVENT)) {
@@ -185,10 +177,4 @@ public class Fleet extends EventProducer implements EventListenerInterface, Loca
 			}
 		}
 	}
-
-	@Override
-	public Bounds getBounds() throws RemoteException {
-		return new BoundingSphere(new Point3d(0, 0, 0), _mdata.RADIUS);
-	}
-
 }

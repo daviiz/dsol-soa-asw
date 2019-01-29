@@ -31,7 +31,7 @@ import nl.tudelft.simulation.language.d3.DirectedPoint;
  * @author daiwenzhi
  *
  */
-public class Decoy extends EventProducer implements EventListenerInterface, Locatable {
+public class Decoy extends EventProducer implements EventListenerInterface{
 
 	/**
 	 * 
@@ -101,7 +101,7 @@ public class Decoy extends EventProducer implements EventListenerInterface, Loca
 		isFired = true;
 		lastThreat = object;
 		// 视图组件注册：
-		Visual2dService.getInstance().register(this._mdata.name, this, simulator,this._mdata);
+		Visual2dService.getInstance().register(this._mdata.name, simulator,this._mdata);
 		next();
 	}
 
@@ -138,22 +138,8 @@ public class Decoy extends EventProducer implements EventListenerInterface, Loca
 
 	}
 
-	@Override
-	public DirectedPoint getLocation() throws RemoteException {
-		double fraction = (this.simulator.getSimulatorTime() - this._mdata.startTime) / (this._mdata.stopTime - this._mdata.startTime);
-		double x = this._mdata.origin.x + (this._mdata.destination.x - this._mdata.origin.x) * fraction;
-		double y = this._mdata.origin.y + (this._mdata.destination.y - this._mdata.origin.y) * fraction;
-		return new DirectedPoint(x, y, 0, 0.0, 0.0, this._mdata.theta);
-	}
-
 	public void setLocation(CartesianPoint _origin) {
 		this._mdata.origin = _origin;
 		this._mdata.destination = _origin;
 	}
-
-	@Override
-	public Bounds getBounds() throws RemoteException {
-		return new BoundingSphere(new Point3d(0, 0, 0), _mdata.RADIUS);
-	}
-
 }

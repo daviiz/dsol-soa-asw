@@ -56,9 +56,9 @@ public class ASWModel extends AbstractDSOLModel.TimeDouble<DEVSSimulatorInterfac
 
 			// 视图组件注册：
 			try {
-				Visual2dService.getInstance().register(f1Data.name, f1,simulator,f1Data);
-				Visual2dService.getInstance().register(f2Data.name, f2, simulator, f2Data);
-				Visual2dService.getInstance().register(s1Data.name, s1, simulator,s1Data);
+				Visual2dService.getInstance().register(f1Data.name,simulator,f1Data);
+				Visual2dService.getInstance().register(f2Data.name, simulator, f2Data);
+				Visual2dService.getInstance().register(s1Data.name, simulator,s1Data);
 			} catch (NamingException e) {
 				SimLogger.always().error(e);
 			}

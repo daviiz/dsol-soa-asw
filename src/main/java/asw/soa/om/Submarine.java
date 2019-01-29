@@ -30,7 +30,7 @@ import nl.tudelft.simulation.language.d3.DirectedPoint;
  * @author daiwenzhi
  *
  */
-public class Submarine extends EventProducer implements EventListenerInterface, Locatable {
+public class Submarine extends EventProducer implements EventListenerInterface {
 
 	/**
 	 * 
@@ -96,14 +96,6 @@ public class Submarine extends EventProducer implements EventListenerInterface, 
 	}
 
 	@Override
-	public DirectedPoint getLocation() throws RemoteException {
-		double fraction = (this.simulator.getSimulatorTime() - this._mdata.startTime) / (this._mdata.stopTime - this._mdata.startTime);
-		double x = this._mdata.origin.x + (this._mdata.destination.x - this._mdata.origin.x) * fraction;
-		double y = this._mdata.origin.y + (this._mdata.destination.y - this._mdata.origin.y) * fraction;
-		return new DirectedPoint(x, y, 0, 0.0, 0.0, 0);
-	}
-
-	@Override
 	public synchronized void notify(EventInterface event) throws RemoteException {
 		if (event.getType().equals(Fleet.FLEET_LOCATION_UPDATE_EVENT)) {
 			EntityMSG tmp = (EntityMSG) event.getContent();
@@ -151,10 +143,4 @@ public class Submarine extends EventProducer implements EventListenerInterface, 
 			Visual2dService.getInstance().update(_mdata);
 		}
 	}
-
-	@Override
-	public Bounds getBounds() throws RemoteException {
-		return new BoundingSphere(new Point3d(0, 0, 0), _mdata.RADIUS);
-	}
-
 }
