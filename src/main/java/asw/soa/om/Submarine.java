@@ -99,10 +99,7 @@ public class Submarine extends EventProducer implements EventListenerInterface {
 			double dis = SimUtil.calcLength(this._mdata.origin.x, this._mdata.origin.y, tmp.x, tmp.y);
 			if (dis < _mdata.detectRange) {
 				// 设置通信线数据
-				_mdata.lineData.x1 = (int) this._mdata.origin.x;
-				_mdata.lineData.y1 = (int) this._mdata.origin.y;
-				_mdata.lineData.x2 = (int) tmp.x;
-				_mdata.lineData.y2 = (int) tmp.y;
+				_mdata.lineData.updateData(this._mdata.origin.x, this._mdata.origin.y, tmp.x, tmp.y);
 				// 施放鱼雷，对同一目标仅施放一个鱼雷
 				if (!LockedTarget.containsKey(tmp.name)) {
 					if (weaponCounts == 2) {
@@ -129,10 +126,7 @@ public class Submarine extends EventProducer implements EventListenerInterface {
 				}
 				Visual2dService.getInstance().update(_mdata);
 			} else {
-				_mdata.lineData.x1 = 0;
-				_mdata.lineData.y1 = 0;
-				_mdata.lineData.x2 = 0;
-				_mdata.lineData.y2 = 0;
+				_mdata.lineData.reset();
 			}
 			Visual2dService.getInstance().update(_mdata);
 		}

@@ -73,10 +73,7 @@ public class Torpedo extends EventProducer implements EventListenerInterface {
 				if (tmpL < _mdata.detectRange) {
 					// 在探测范围内 并且是生存状态的实体才显示通信线
 					if (tmp.status == true) {
-						_mdata.lineData.x1 = (int) this._mdata.origin.x;
-						_mdata.lineData.y1 = (int) this._mdata.origin.y;
-						_mdata.lineData.x2 = (int) tmp.x;
-						_mdata.lineData.y2 = (int) tmp.y;
+						_mdata.lineData.updateData(this._mdata.origin.x, this._mdata.origin.y, tmp.x, tmp.y);
 					}
 					// 在探测范围内 找到更近的 设置其为目标
 					if (tmpL < lastDistance) {
@@ -89,10 +86,7 @@ public class Torpedo extends EventProducer implements EventListenerInterface {
 						lastTarget = new EntityMSG(tmp);
 					}
 				} else {
-					_mdata.lineData.x1 = 0;
-					_mdata.lineData.y1 = 0;
-					_mdata.lineData.x2 = 0;
-					_mdata.lineData.y2 = 0;
+					_mdata.lineData.reset();
 				}
 			}
 		}
