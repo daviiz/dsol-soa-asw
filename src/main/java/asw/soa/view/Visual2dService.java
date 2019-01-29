@@ -67,7 +67,14 @@ public class Visual2dService {
 		}
 		components.put(name, new Visual2dRender(loc,simulator,_data));
 	}
-	
+	/**
+	 * 注册2D视图组件
+	 * @param name  --唯一标识，不允许重复
+	 * @param simulator --仿真器引用，用于调度
+	 * @param _data     --模型数据
+	 * @throws RemoteException
+	 * @throws NamingException
+	 */
 	public void register(String name,TimeDouble simulator, ModelData _data) throws RemoteException, NamingException {
 		if (name == null || name.equals("") ||simulator == null || _data == null)
 			return;
