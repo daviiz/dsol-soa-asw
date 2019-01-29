@@ -82,7 +82,7 @@ public class Visual2dService {
 		//查重
 		for (HashMap.Entry<String, Visual2dRender> entry : components.entrySet()) {
 			if (entry.getKey().equals(name)) {
-				SimLogger.always().error(new Exception("no duplicate model name !"));
+				SimLogger.always().error(new Exception("Duplicate model name denyed!"));
 				return;
 			}
 		}
